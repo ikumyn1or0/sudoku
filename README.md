@@ -1,73 +1,57 @@
-# React + TypeScript + Vite
+# 数独
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ブラウザで動く数独パズルゲームです。
 
-Currently, two official plugins are available:
+## 技術スタック
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React + TypeScript + Vite
 
-## React Compiler
+## 起動方法
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+ブラウザが自動で開きます。開発サーバーはアプリ内の「終了」ボタンで停止できます。
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 機能
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### ゲームプレイ
+- 難易度は初級・中級・上級・エキスパートの4段階
+- タイマー表示
+- セルを選択して数字を入力（マウスまたはキーボード）
+
+### 操作
+| 操作 | 動作 |
+|------|------|
+| `1`〜`9` | 数字入力 |
+| `Backspace` / `Delete` / `0` | 消去 |
+| `N` / `スペース` | メモモード切替 |
+| `↑↓←→` | セル移動 |
+| `Ctrl+Z` | 1手戻す |
+
+### メモ機能
+メモモードをオンにすると、セルに候補数字を複数書き込めます。選択中のセルと同じ数字が確定しているマスでは、関連するメモ数字が青・太字で強調されます。
+
+### ヒント機能
+- **ヒントA**: 選択中のセル（未選択なら最初の未確定セル）に正解を表示
+- **ヒントB**: ソルバーが次に置けるマスを技法名とともに提示。使用した技法に応じて以下のメッセージが表示されます
+  - `Naked / Hidden Single` — 候補が1つに絞れるマス
+  - `Locked Candidates / Pair・Triple` — 中級消去後に確定するマス
+  - `X-Wing / Swordfish / XY-Wing` — 上級消去後に確定するマス
+  - エキスパートレベルで手がかりがない場合はヒントAを使用してください
+
+### 1手戻す
+「戻す」ボタンまたは `Ctrl+Z` で直前の操作を1手だけ取り消せます。
+
+## 難易度の基準
+
+技法ベースのソルバーで難易度を自動分類しています。
+
+| 難易度 | 必要な技法 |
+|--------|-----------|
+| 初級 | Naked Single / Hidden Single のみ |
+| 中級 | Locked Candidates、Naked/Hidden Pair・Triple |
+| 上級 | X-Wing、Swordfish、XY-Wing、XYZ-Wing |
+| エキスパート | 上記技法では解けないパズル |
