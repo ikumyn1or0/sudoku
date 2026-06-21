@@ -13,16 +13,14 @@ export const NumberPad: FC<Props> = ({ onInput, notesMode, onToggleNotes }) => {
         <button
           className={`btn btn--action ${notesMode ? 'btn--active' : ''}`}
           onClick={onToggleNotes}
-          title="N"
         >
-          メモ{notesMode ? ' ON' : ''}
+          メモ{notesMode ? ' ON' : ''}<span className="btn__shortcut">N</span>
         </button>
         <button
           className="btn btn--action"
           onClick={() => onInput(null)}
-          title="Del"
         >
-          消去
+          消去<span className="btn__shortcut">Del</span>
         </button>
       </div>
       <div className="number-pad__numbers">

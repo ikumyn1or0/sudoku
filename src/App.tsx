@@ -11,6 +11,12 @@ const DIFFICULTIES: { value: Difficulty; label: string }[] = [
   { value: 'expert', label: 'エキスパート' },
 ];
 
+const TECHNIQUE_LABELS: Record<string, string> = {
+  'Naked / Hidden Single':           '一択確定（Naked/Hidden Single）',
+  'Locked Candidates / Pair・Triple': 'ペア・三つ組消去（Locked Candidates/Pair/Triple）',
+  'X-Wing / Swordfish / XY-Wing':    'X-Wing・XY-Wing・Swordfish消去',
+};
+
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60).toString().padStart(2, '0');
   const s = (seconds % 60).toString().padStart(2, '0');
@@ -93,7 +99,8 @@ export default function App() {
 
       {hintMove && (
         <div className="hint-message">
-          ヒント: {hintMove.technique} を使って ({hintMove.row + 1}行{hintMove.col + 1}列) に {hintMove.value} を確定できます
+          ({hintMove.row + 1}行{hintMove.col + 1}列) に <strong>{hintMove.value}</strong> が確定できます
+          <div className="hint-technique">{TECHNIQUE_LABELS[hintMove.technique] ?? hintMove.technique}</div>
         </div>
       )}
 
@@ -102,25 +109,22 @@ export default function App() {
           className="btn btn--undo"
           onClick={undo}
           disabled={loading || !prev}
-          title="1手戻す (Ctrl+Z)"
         >
-          戻す
+          戻す<span className="btn__shortcut">Ctrl+Z</span>
         </button>
         <button
           className="btn btn--hint"
           onClick={hintA}
           disabled={loading || completed}
-          title="選択中（または最初の）マスに正解を表示"
         >
-          ヒントA
+          答えを見る
         </button>
         <button
           className="btn btn--hint"
           onClick={() => hintB(board)}
           disabled={loading || completed}
-          title="ソルバーが次の手を提示"
         >
-          ヒントB
+          次の手を教える
         </button>
       </div>
 
