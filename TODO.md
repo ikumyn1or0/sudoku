@@ -21,13 +21,12 @@
 - [x] **ダークモードの追加**
   - `prefers-color-scheme: dark` に自動対応済み（CSS変数の上書きとハードコード色の dark 版を追加）
 
-- [ ] **Windowsからワンクリックで起動できるようにする** `難易度: 小〜中`
-  - 目的: WSLを毎回起動してコマンドを叩かずに、デスクトップのショートカットなどから即起動したい
-  - 候補:
-    - **PWA化**: ブラウザの「アプリとしてインストール」でデスクトップに置ける（Viteプラグインで対応可）
-    - **静的ビルド + .bat**: `npm run build` の成果物を `start index.html` するバッチファイルで開く（WSL不要）
-    - **Electron化**: 専用ウィンドウで動くネイティブアプリ（規模が大きい）
-  - 影響: ビルド設定の変更のみ（ゲームロジック・UIは無変更）
+- [x] **Windowsからワンクリックで起動できるようにする**
+  - GitHub Pages にデプロイ + PWA化済み
+  - `git push` でデプロイ自動実行（GitHub Actions）
+  - Chrome で「アプリとしてインストール」するとデスクトップにアイコンが追加される
+  - URL: https://ikumyn1or0.github.io/sudoku/
+  - 初回のみ GitHub Settings → Pages → Source を「GitHub Actions」に設定する必要あり
 
 - [ ] **Killer Sudoku モードの実装** `難易度: 大`
   - 点線で囲まれたケージの合計値が制約として与えられるモード
