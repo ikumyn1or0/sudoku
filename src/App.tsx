@@ -99,8 +99,13 @@ export default function App() {
 
       {hintMove && (
         <div className="hint-message">
-          ({hintMove.row + 1}行{hintMove.col + 1}列) に <strong>{hintMove.value}</strong> が確定できます
-          <div className="hint-technique">{TECHNIQUE_LABELS[hintMove.technique] ?? hintMove.technique}</div>
+          {hintMove.kind === 'note-error'
+            ? <>({hintMove.row + 1}行{hintMove.col + 1}列) のメモ <strong>{hintMove.value}</strong> は矛盾しています</>
+            : <>
+                ({hintMove.row + 1}行{hintMove.col + 1}列) に <strong>{hintMove.value}</strong> が確定できます
+                <div className="hint-technique">{TECHNIQUE_LABELS[hintMove.technique] ?? hintMove.technique}</div>
+              </>
+          }
         </div>
       )}
 
@@ -121,7 +126,7 @@ export default function App() {
         </button>
         <button
           className="btn btn--hint"
-          onClick={() => hintB(board)}
+          onClick={() => hintB(board, notes)}
           disabled={loading || completed}
         >
           次の手を教える

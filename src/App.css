@@ -124,7 +124,7 @@ body {
 .cell--selected { background: var(--cell-selected); }
 .cell--hint { background: #d1fae5; }
 
-.cell--same-number:not(.cell--selected) .cell__value {
+.cell--same-number .cell__value {
   background: var(--accent);
   color: white;
   border-radius: 50%;
@@ -380,6 +380,50 @@ body {
 .completion-hint {
   font-size: 14px;
   color: #94a3b8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --text: #f1f5f9;
+    --text-given: #f1f5f9;
+    --text-user: #93c5fd;
+    --text-error: #f87171;
+    --text-note: #94a3b8;
+    --border-cell: #334155;
+    --border-box: #94a3b8;
+    --cell-selected: #1e3a5f;
+    --cell-related: #243447;
+    --cell-same: #172554;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --btn-bg: #334155;
+    --btn-hover: #475569;
+  }
+
+  .btn--hint {
+    background: #052e16;
+    color: #6ee7b7;
+    border-color: #166534;
+  }
+  .btn--hint:hover:not(:disabled) { background: #064e3b; }
+
+  .hint-message {
+    color: #6ee7b7;
+    background: #052e16;
+    border-color: #166534;
+  }
+
+  .cell--hint { background: #064e3b; }
+
+  .btn--quit {
+    background: #334155;
+    color: #94a3b8;
+  }
+  .btn--quit:hover { background: #450a0a; color: #f87171; }
+
+  .completion-card { background: #1e293b; }
 }
 
 @keyframes fade-in {

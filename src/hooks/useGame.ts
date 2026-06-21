@@ -246,8 +246,8 @@ export function useGame() {
     dispatch({ type: 'HINT_A' });
   }, []);
 
-  const hintB = useCallback((board: Grid) => {
-    const result = findNextHint(board);
+  const hintB = useCallback((board: Grid, notes: Set<number>[][]) => {
+    const result = findNextHint(board, notes);
     dispatch({ type: 'HINT_B', result });
   }, []);
 

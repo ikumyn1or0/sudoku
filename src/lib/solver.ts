@@ -5,6 +5,7 @@ export interface HintMove {
   col: number;
   value: number;
   technique: string;
+  kind: 'move' | 'note-error';
 }
 
 type CandGrid = Set<number>[][];
@@ -394,14 +395,37 @@ const HINT_LEVELS: { level: Level; technique: string }[] = [
   { level: 'advanced',     technique: 'X-Wing / Swordfish / XY-Wing' },
 ];
 
-export function findNextHint(board: Grid): HintMove | null {
+function checkNoteMistakes(board: Grid, notes: Set<number>[][]): { row: number; col: number; value: number } | null {
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      const num = board[r][c];
+      if (num === null) continue;
+      for (let cc = 0; cc < 9; cc++)
+        if (cc !== c && board[r][cc] === null && notes[r][cc].has(num))
+          return { row: r, col: cc, value: num };
+      for (let rr = 0; rr < 9; rr++)
+        if (rr !== r && board[rr][c] === null && notes[rr][c].has(num))
+          return { row: rr, col: c, value: num };
+      const br = Math.floor(r / 3) * 3, bc = Math.floor(c / 3) * 3;
+      for (let rr = br; rr < br + 3; rr++)
+        for (let cc = bc; cc < bc + 3; cc++)
+          if ((rr !== r || cc !== c) && board[rr][cc] === null && notes[rr][cc].has(num))
+            return { row: rr, col: cc, value: num };
+    }
+  }
+  return null;
+}
+
+export function findNextHint(board: Grid, notes: Set<number>[][]): HintMove | null {
+  const noteError = checkNoteMistakes(board, notes);
+  if (noteError) return { ...noteError, technique: '', kind: 'note-error' };
+
   for (const { level, technique } of HINT_LEVELS) {
     const { values, cands } = buildState(board);
-    // 脱出せずに消去を繰り返す（値の配置はしない）
     let changed = true;
     while (changed) changed = applyEliminations(values, cands, level);
     const hit = findSingle(values, cands);
-    if (hit) return { ...hit, technique };
+    if (hit) return { ...hit, technique, kind: 'move' };
   }
   return null;
 }
