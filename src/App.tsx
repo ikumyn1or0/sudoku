@@ -1,8 +1,24 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useGame, type Difficulty } from './hooks/useGame';
 import { Board } from './components/Board';
 import { NumberPad } from './components/NumberPad';
 import './App.css';
+
+type Theme = 'light' | 'dark' | 'system';
+
+function getInitialTheme(): Theme {
+  return (localStorage.getItem('theme') as Theme) ?? 'system';
+}
+
+function applyTheme(theme: Theme) {
+  if (theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else if (theme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+}
 
 const DIFFICULTIES: { value: Difficulty; label: string }[] = [
   { value: 'easy',   label: '初級' },
@@ -23,12 +39,35 @@ function formatTime(seconds: number): string {
   return `${m}:${s}`;
 }
 
+const THEME_ICONS: Record<Theme, string> = {
+  light: '☀️',
+  dark: '🌙',
+  system: '💻',
+};
+
+const NEXT_THEME: Record<Theme, Theme> = {
+  light: 'dark',
+  dark: 'system',
+  system: 'light',
+};
+
 export default function App() {
   const {
     puzzle, board, solution, notes,
     selected, difficulty, completed, seconds, notesMode, loading, hintMove, prev,
     selectCell, inputNumber, toggleNotes, startGame, hintA, hintB, undo,
   } = useGame();
+
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+
+  useEffect(() => {
+    applyTheme(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const cycleTheme = useCallback(() => {
+    setTheme(t => NEXT_THEME[t]);
+  }, []);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
@@ -63,7 +102,16 @@ export default function App() {
     <div className="app">
       <header className="header">
         <h1 className="title">数独</h1>
-        <div className="timer">{formatTime(seconds)}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            className="btn--theme"
+            onClick={cycleTheme}
+            title={`テーマ: ${theme === 'system' ? 'システム' : theme === 'dark' ? 'ダーク' : 'ライト'}`}
+          >
+            {THEME_ICONS[theme]}
+          </button>
+          <div className="timer">{formatTime(seconds)}</div>
+        </div>
       </header>
 
       <div className="difficulty-selector">
